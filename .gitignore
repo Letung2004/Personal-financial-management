@@ -1,0 +1,16 @@
+# Java Compiled classes
+*.class
+bin/
+
+# IDE files
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# Test output and temp files
+demo_data.csv
+test_errors.csv
+perf_test_*.csv
+*.log

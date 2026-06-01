@@ -1,0 +1,41 @@
+# FinanceManager Data File - Saved: 2026-06-01 22:21:35
+# Version: 1.0
+# ---TREE---
+THU,THU
+THU/Lương,THU
+THU/Thưởng,THU
+THU/Đầu tư,THU
+THU/Thu nhập khác,THU
+CHI,CHI
+CHI/Nhu cầu thiết yếu,CHI
+CHI/Nhu cầu thiết yếu/Ăn uống,CHI
+CHI/Nhu cầu thiết yếu/Ăn uống/Ăn sáng,CHI
+CHI/Nhu cầu thiết yếu/Ăn uống/Ăn trưa,CHI
+CHI/Nhu cầu thiết yếu/Ăn uống/Ăn tối,CHI
+CHI/Nhu cầu thiết yếu/Nhà ở,CHI
+CHI/Nhu cầu thiết yếu/Nhà ở/Tiền thuê,CHI
+CHI/Nhu cầu thiết yếu/Nhà ở/Điện nước,CHI
+CHI/Nhu cầu thiết yếu/Di chuyển,CHI
+CHI/Nhu cầu thiết yếu/Di chuyển/Xăng xe,CHI
+CHI/Nhu cầu thiết yếu/Di chuyển/Giao thông công cộng,CHI
+CHI/Giáo dục & Phát triển,CHI
+CHI/Giáo dục & Phát triển/Sách vở,CHI
+CHI/Giáo dục & Phát triển/Khóa học,CHI
+CHI/Hưởng thụ,CHI
+CHI/Hưởng thụ/Du lịch,CHI
+CHI/Hưởng thụ/Giải trí,CHI
+---TRANSACTIONS---
+2026-05-01,15000000.00,THU/Lương,Nhận lương tháng 5
+2026-05-02,3500000.00,CHI/Nhu cầu thiết yếu/Nhà ở/Tiền thuê,Thanh toán tiền thuê nhà tháng 5
+2026-05-02,180000.00,CHI/Giáo dục & Phát triển/Sách vở,Mua sách cấu trúc dữ liệu và giải thuật
+2026-05-03,80000.00,CHI/Nhu cầu thiết yếu/Di chuyển/Xăng xe,Đổ xăng xe máy
+2026-05-05,45000.00,CHI/Nhu cầu thiết yếu/Ăn uống/Ăn sáng,Ăn sáng phở bò
+2026-05-05,450000.00,CHI/Nhu cầu thiết yếu/Nhà ở/Điện nước,Tiền điện tháng 5
+2026-05-06,60000.00,CHI/Nhu cầu thiết yếu/Ăn uống/Ăn trưa,Cơm trưa văn phòng
+2026-05-07,450000.00,CHI/Nhu cầu thiết yếu/Ăn uống/Ăn tối,Ăn tối lẩu cua đồng với gia đình
+2026-05-08,1200000.00,CHI/Giáo dục & Phát triển/Khóa học,Đăng ký khóa học lập trình Java nâng cao
+2026-05-10,3000000.00,THU/Thưởng,Thưởng dự án hoàn thành xuất sắc
+2026-05-12,100000.00,CHI/Nhu cầu thiết yếu/Di chuyển/Giao thông công cộng,Mua vé tháng xe buýt
+2026-05-15,1200000.00,THU/Đầu tư,Lãi đầu tư chứng khoán
+2026-05-20,150000.00,CHI/Hưởng thụ/Giải trí,Vé xem phim và bắp nước
+2026-05-24,800000.00,CHI/Hưởng thụ/Du lịch,Chuyến dã ngoại cuối tuần tại Ba Vì
