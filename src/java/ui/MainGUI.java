@@ -527,6 +527,81 @@ public class MainGUI extends JFrame {
         controlPanel.add(ctrlTitle);
         controlPanel.add(Box.createVerticalStrut(25));
 
+        /// chỉnh lại default render của tree (xấu hết cả code)
+        // hiển thị số tiền và hạn mức
+        categoryTree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel,
+                                                          boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+
+                if (sel) {
+                    setForeground(getTextSelectionColor());
+                    setBackground(getBackgroundSelectionColor());
+                } else {
+                    setForeground(tree.getForeground()); // Lấy màu chữ gốc của cây
+                    setBackground(tree.getBackground()); // Lấy màu nền gốc của cây
+                }
+                /// hiển thị cây ///
+                if (value instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                    if (node.getUserObject() instanceof String) {
+                        String path = (String) node.getUserObject();
+                        CategoryNode catNode = manager.getTree().getNodeByPath(path);
+
+                        if (catNode != null) {
+                            // tên gốc của danh mục
+                            // tạo tên danh mục bằng html để thêm màu cho thu chi
+                            StringBuilder sb = new StringBuilder("<html>");
+                            sb.append(catNode.getName());
+                            sb.append((" ___"));
+/*
+                            //   hạn mức
+                            if (catNode.getBudget() > 0) {
+                                sb.append(String.format(" <font color='#FF7043'> [%,.0f]</font>", catNode.getBudget()));
+                            }
+*/
+                            // số tiền đã thu / chi thực tế
+                            double total = manager.getTree().calculateTotalDfs(catNode);
+                            if (total > 0) {
+                                if ("CHI".equals(catNode.getCategoryType()) || path.startsWith("CHI/")) {
+                                    // đỏ nhạt
+                                    ///chi
+                                    sb.append(String.format(" <font color='#FF7043'> [%,.0f]</font>", total));
+                                } else {
+                                    // xanh lá cây
+                                    ///thu
+                                    sb.append(String.format(" <font color='#4CAF50'> [%,.0f]</font>", total));
+                                }
+                            }
+
+
+
+                            sb.append("</html>");
+
+                            //gán chuỗi html hoàn chỉnh vào Node
+                            setText(sb.toString());
+                        }
+                    }
+                }
+                return this;
+            }
+            /// bỏ màu default của tree
+            @Override
+            public Color getBackgroundNonSelectionColor() {
+                // Trả về null hoặc màu nền của cây để nó hoàn toàn trong suốt
+                return (categoryTree != null) ? categoryTree.getBackground() : super.getBackgroundNonSelectionColor();
+            }
+
+            @Override
+            public Color getTextNonSelectionColor() {
+                // Đảm bảo chữ khi không được chọn luôn lấy đúng màu text của hệ thống
+                return (categoryTree != null) ? categoryTree.getForeground() : super.getTextNonSelectionColor();
+            }
+        });
+
+        /// nút thao tác ///
+
         JButton btnAdd = createCtrlButton("Thêm danh mục con");
         btnAdd.addActionListener(e -> addCategoryAction());
         controlPanel.add(btnAdd);
@@ -541,8 +616,32 @@ public class MainGUI extends JFrame {
         btnDelete.addActionListener(e -> deleteCategoryAction());
         controlPanel.add(btnDelete);
 
+        controlPanel.add(Box.createVerticalStrut(12));
+/*
+        JButton btnBudget = createCtrlButton("Cài đặt hạn mức");
+        btnBudget.addActionListener(e -> setBudgetAction());
+        controlPanel.add(btnBudget);
+ */
+        controlPanel.add(Box.createVerticalStrut(20));
+
+        JPanel textnotePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 8));
+        textnotePanel.setOpaque(false); //trong suốt (để hòa vào màu nền của thanh bên trái)
+
+        // mã html vẽ các ô vuông màu kèm chữ
+        JLabel textnoteLabel = new JLabel("<html><div style='font-family: Segoe UI; font-size: 11px; color: #AAAAAA;'>"
+                + "<font color='#4CAF50'>■</font> Tổng thu &nbsp;&nbsp;"
+                + "<font color='#FF7043'>■</font> Tổng chi"
+                + "</div></html>");
+        textnotePanel.add(textnoteLabel);
+        //ép chiều cao giới hạn của textnotePanel để ko lỗi chiều cao nút ở trên
+        textnotePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, textnotePanel.getPreferredSize().height));
+        controlPanel.add(textnotePanel);
+        //
+
+        controlPanel.add(Box.createVerticalStrut(12));
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, controlPanel);
-        splitPane.setDividerLocation(520);
+        splitPane.setDividerLocation(480);
         splitPane.setBorder(new LineBorder(COLOR_BORDER, 1, true));
         splitPane.setOpaque(false);
 

@@ -23,6 +23,16 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+/*
+        System.out.println("  [HỆ THỐNG] Đang mở giao diện đồ họa Swing GUI...");
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            ui.MainGUI gui = new ui.MainGUI();
+            gui.setVisible(true);
+        });
+
+*/
+
         System.out.println("╔══════════════════════════════════════════════════════════╗");
         System.out.println("║        HỆ THỐNG QUẢN LÝ TÀI CHÍNH CÁ NHÂN (JAVA)         ║");
         System.out.println("║        Môn: Cấu trúc dữ liệu & Giải thuật                ║");
