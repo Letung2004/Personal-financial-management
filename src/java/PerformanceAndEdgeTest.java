@@ -22,7 +22,7 @@ public class PerformanceAndEdgeTest {
         System.out.println("================================════════════════════════════");
     }
 
-    private static void runEdgeCaseTests() {
+    public static void runEdgeCaseTests() {
         System.out.println("\n--- [PHẦN 1] KIỂM THỬ BIÊN VÀ LOGIC (EDGE CASES) ---");
         int passed = 0;
         int total = 0;
@@ -177,7 +177,7 @@ public class PerformanceAndEdgeTest {
         System.out.printf("  => Kết quả: Đạt %d/%d ca kiểm thử biên.\n", passed, total);
     }
 
-    private static void runPerformanceTests() {
+    public static void runPerformanceTests() {
         System.out.println("\n--- [PHẦN 2] KIỂM THỬ HIỆU NĂNG (PERFORMANCE TESTS) ---");
         int[] sizes = {100, 1000, 10000};
         

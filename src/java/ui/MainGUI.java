@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.io.*;
 
 
 
@@ -139,6 +140,7 @@ public class MainGUI extends JFrame {
         mainContentPanel.add(createTransactionPanel(), "TRANSACTIONS");
         mainContentPanel.add(createSearchPanel(), "SEARCH");
         mainContentPanel.add(createFileIOPanel(), "FILE_IO");
+        mainContentPanel.add(createQATestPanel(), "QA_TEST");
         mainContentPanel.add(createPythonGUIPanel(), "PYTHON_GUI");
 
         add(mainContentPanel, BorderLayout.CENTER);
@@ -186,13 +188,15 @@ public class MainGUI extends JFrame {
         JButton btnTxns = createNavButton("Nhập liệu Giao dịch", "TRANSACTIONS");
         JButton btnSrch = createNavButton("Tìm kiếm & Bộ lọc", "SEARCH");
         JButton btnFile = createNavButton("Lưu trữ & Tải file", "FILE_IO");
+        JButton btnQATest = createNavButton("Kiểm thử & Hiệu năng", "QA_TEST");
         JButton btnPyGUI = createNavButton("Kiểm thử Python GUI", "PYTHON_GUI");
 
         navPanel.add(btnDash); navPanel.add(Box.createVerticalStrut(10));
         navPanel.add(btnCats); navPanel.add(Box.createVerticalStrut(10));
         navPanel.add(btnTxns); navPanel.add(Box.createVerticalStrut(10));
         navPanel.add(btnSrch); navPanel.add(Box.createVerticalStrut(10));
-        navPanel.add(btnFile); navPanel.add(Box.createVerticalStrut(100)); ///tách biệt ra tí để dễ hình dung
+        navPanel.add(btnFile); navPanel.add(Box.createVerticalStrut(10));
+        navPanel.add(btnQATest); navPanel.add(Box.createVerticalStrut(70)); ///tách biệt ra tí để dễ hình dung
         navPanel.add(btnPyGUI);
 
         /// đống này chèn thêm kiểu button để nhấp nhô
@@ -202,6 +206,7 @@ public class MainGUI extends JFrame {
         navButtons.add(btnTxns);
         navButtons.add(btnSrch);
         navButtons.add(btnFile);
+        navButtons.add(btnQATest);
         navButtons.add(btnPyGUI);
         ///
 
@@ -1325,5 +1330,195 @@ public class MainGUI extends JFrame {
         panel.add(wrapper, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    private JPanel createQATestPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(BG_MAIN);
+        panel.setBorder(new EmptyBorder(25, 25, 25, 25));
+
+        JLabel titleLbl = new JLabel("BỘ KIỂM THỬ TỰ ĐỘNG & ĐO HIỆU NĂNG (JAVA QA/QC)");
+        titleLbl.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLbl.setForeground(COLOR_TEXT);
+        titleLbl.setBorder(new EmptyBorder(0, 0, 15, 0));
+        panel.add(titleLbl, BorderLayout.NORTH);
+
+        JPanel mainContent = new JPanel(new BorderLayout(0, 15));
+        mainContent.setOpaque(false);
+
+        // Top description panel
+        JPanel topPanel = new JPanel(new BorderLayout(0, 10));
+        topPanel.setOpaque(false);
+
+        JLabel lblDesc = new JLabel("<html><body style='width: 750px;'>"
+                + "<p style='color: #94A3B8; line-height: 1.4;'>"
+                + "Bộ kiểm thử tự động dành cho SV4 (QA/QC) để phát hiện và ngăn chặn các lỗi biên hệ thống "
+                + "(nhập tiền âm, xóa trùng danh mục, rò rỉ nodeIndex khi xóa CASCADE/REPARENT, lỗi dấu phẩy CSV) "
+                + "và đo lường hiệu năng thực tế của cấu trúc dữ liệu cây tài chính (DFS, Tìm kiếm O(1)) với dữ liệu lên tới 10.000 bản ghi."
+                + "</p></body></html>");
+        lblDesc.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        topPanel.add(lblDesc, BorderLayout.NORTH);
+
+        // Control buttons panel
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        btnPanel.setOpaque(false);
+
+        JButton btnRunAll = new JButton("CHẠY TOÀN BỘ KIỂM THỬ");
+        styleAccentButton(btnRunAll);
+        btnRunAll.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        JButton btnRunEdge = new JButton("KIỂM THỬ BIÊN");
+        styleAccentButton(btnRunEdge);
+        btnRunEdge.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        JButton btnRunPerf = new JButton("ĐO HIỆU NĂNG");
+        styleAccentButton(btnRunPerf);
+        btnRunPerf.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        JButton btnClear = new JButton("XÓA MÀN HÌNH");
+        styleAccentButton(btnClear);
+        btnClear.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        btnPanel.add(btnRunAll);
+        btnPanel.add(btnRunEdge);
+        btnPanel.add(btnRunPerf);
+        btnPanel.add(btnClear);
+        topPanel.add(btnPanel, BorderLayout.CENTER);
+
+        mainContent.add(topPanel, BorderLayout.NORTH);
+
+        // Terminal text area
+        JTextArea txtTerminal = new JTextArea();
+        txtTerminal.setBackground(new Color(15, 23, 42)); // Slate 900
+        txtTerminal.setForeground(new Color(74, 222, 128)); // Green-400
+        txtTerminal.setCaretColor(Color.WHITE);
+        txtTerminal.setFont(new Font("Consolas", Font.PLAIN, 12));
+        txtTerminal.setEditable(false);
+        txtTerminal.setMargin(new Insets(10, 10, 10, 10));
+
+        JScrollPane scrollTerminal = new JScrollPane(txtTerminal);
+        scrollTerminal.setBorder(new LineBorder(COLOR_BORDER, 1, true));
+        mainContent.add(scrollTerminal, BorderLayout.CENTER);
+
+        panel.add(mainContent, BorderLayout.CENTER);
+
+        // Run actions
+        ActionListener runAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object source = e.getSource();
+                btnRunAll.setEnabled(false);
+                btnRunEdge.setEnabled(false);
+                btnRunPerf.setEnabled(false);
+                btnClear.setEnabled(false);
+
+                txtTerminal.append(">>> Đang khởi chạy tiến trình kiểm thử...\n");
+
+                new Thread(() -> {
+                    PrintStream originalOut = System.out;
+                    PrintStream originalErr = System.err;
+
+                    TextAreaOutputStream outStream = new TextAreaOutputStream(txtTerminal);
+                    PrintStream ps = new PrintStream(outStream, true);
+
+                    System.setOut(ps);
+                    System.setErr(ps);
+
+                    try {
+                        Class<?> testClass = Class.forName("PerformanceAndEdgeTest");
+                        if (source == btnRunAll) {
+                            java.lang.reflect.Method mainMethod = testClass.getMethod("main", String[].class);
+                            mainMethod.invoke(null, (Object) new String[0]);
+                        } else if (source == btnRunEdge) {
+                            System.out.println("================================════════════════════════════");
+                            System.out.println("          BẮT ĐẦU KIỂM THỬ BIÊN VÀ LOGIC (EDGE CASES)       ");
+                            System.out.println("================================════════════════════════════");
+                            java.lang.reflect.Method edgeMethod = testClass.getMethod("runEdgeCaseTests");
+                            edgeMethod.invoke(null);
+                            System.out.println("\n================================════════════════════════════");
+                            System.out.println("                 HOÀN THÀNH KIỂM THỬ BIÊN!                  ");
+                            System.out.println("================================════════════════════════════");
+                        } else if (source == btnRunPerf) {
+                            System.out.println("================================════════════════════════════");
+                            System.out.println("             BẮT ĐẦU ĐO HIỆU NĂNG HỆ THỐNG                  ");
+                            System.out.println("================================════════════════════════════");
+                            java.lang.reflect.Method perfMethod = testClass.getMethod("runPerformanceTests");
+                            perfMethod.invoke(null);
+                            System.out.println("\n================================════════════════════════════");
+                            System.out.println("                 HOÀN THÀNH KIỂM THỬ HIỆU NĂNG!             ");
+                            System.out.println("================================════════════════════════════");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace(ps);
+                    } finally {
+                        System.setOut(originalOut);
+                        System.setErr(originalErr);
+
+                        SwingUtilities.invokeLater(() -> {
+                            btnRunAll.setEnabled(true);
+                            btnRunEdge.setEnabled(true);
+                            btnRunPerf.setEnabled(true);
+                            btnClear.setEnabled(true);
+                            txtTerminal.append(">>> Đã hoàn thành tác vụ.\n");
+                        });
+                    }
+                }).start();
+            }
+        };
+
+        btnRunAll.addActionListener(runAction);
+        btnRunEdge.addActionListener(runAction);
+        btnRunPerf.addActionListener(runAction);
+
+        btnClear.addActionListener(e -> txtTerminal.setText(""));
+
+        return panel;
+    }
+
+    private static class TextAreaOutputStream extends OutputStream {
+        private final JTextArea textArea;
+        private final StringBuilder buffer = new StringBuilder();
+
+        public TextAreaOutputStream(JTextArea textArea) {
+            this.textArea = textArea;
+        }
+
+        @Override
+        public synchronized void write(int b) throws IOException {
+            buffer.append((char) b);
+            if (b == '\n' || buffer.length() >= 512) {
+                flushBuffer();
+            }
+        }
+
+        @Override
+        public synchronized void write(byte[] b, int off, int len) throws IOException {
+            buffer.append(new String(b, off, len));
+            if (buffer.indexOf("\n") >= 0 || buffer.length() >= 512) {
+                flushBuffer();
+            }
+        }
+
+        @Override
+        public synchronized void flush() throws IOException {
+            flushBuffer();
+        }
+
+        private void flushBuffer() {
+            if (buffer.length() == 0) return;
+            final String text = buffer.toString();
+            buffer.setLength(0);
+            SwingUtilities.invokeLater(() -> {
+                textArea.append(text);
+                textArea.setCaretPosition(textArea.getDocument().getLength());
+            });
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MainGUI gui = new MainGUI();
+            gui.setVisible(true);
+        });
     }
 }
