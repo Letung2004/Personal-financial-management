@@ -139,6 +139,7 @@ public class MainGUI extends JFrame {
         mainContentPanel.add(createTransactionPanel(), "TRANSACTIONS");
         mainContentPanel.add(createSearchPanel(), "SEARCH");
         mainContentPanel.add(createFileIOPanel(), "FILE_IO");
+        mainContentPanel.add(createPythonGUIPanel(), "PYTHON_GUI");
 
         add(mainContentPanel, BorderLayout.CENTER);
 
@@ -185,12 +186,14 @@ public class MainGUI extends JFrame {
         JButton btnTxns = createNavButton("Nhập liệu Giao dịch", "TRANSACTIONS");
         JButton btnSrch = createNavButton("Tìm kiếm & Bộ lọc", "SEARCH");
         JButton btnFile = createNavButton("Lưu trữ & Tải file", "FILE_IO");
+        JButton btnPyGUI = createNavButton("Kiểm thử Python GUI", "PYTHON_GUI");
 
         navPanel.add(btnDash); navPanel.add(Box.createVerticalStrut(10));
         navPanel.add(btnCats); navPanel.add(Box.createVerticalStrut(10));
         navPanel.add(btnTxns); navPanel.add(Box.createVerticalStrut(10));
-        navPanel.add(btnSrch); navPanel.add(Box.createVerticalStrut(100)); ///tách biệt ra tí để dễ hình dung
-        navPanel.add(btnFile);
+        navPanel.add(btnSrch); navPanel.add(Box.createVerticalStrut(10));
+        navPanel.add(btnFile); navPanel.add(Box.createVerticalStrut(100)); ///tách biệt ra tí để dễ hình dung
+        navPanel.add(btnPyGUI);
 
         /// đống này chèn thêm kiểu button để nhấp nhô
         navButtons.clear();
@@ -199,6 +202,7 @@ public class MainGUI extends JFrame {
         navButtons.add(btnTxns);
         navButtons.add(btnSrch);
         navButtons.add(btnFile);
+        navButtons.add(btnPyGUI);
         ///
 
         sidebar.add(navPanel, BorderLayout.CENTER);
@@ -1256,5 +1260,70 @@ public class MainGUI extends JFrame {
 
         // 4: Cột Ghi chú (Sẽ tự động chiếm toàn bộ phần diện tích còn lại)
         table.getColumnModel().getColumn(4).setPreferredWidth(300);
+    }
+
+    private void launchPythonGUI() {
+        try {
+            // Xác định đường dẫn tương đối từ thư mục chạy ứng dụng
+            String pythonScriptPath = "src/python/main.py";
+            
+            // Tạo tiến trình chạy Python
+            ProcessBuilder pb = new ProcessBuilder("python", pythonScriptPath);
+            pb.directory(new java.io.File("."));
+            
+            // Khởi chạy tiến trình
+            pb.start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Không thể chạy ứng dụng Python.\nHãy chắc chắn rằng Python đã được cài đặt và cấu hình PATH.", 
+                "Lỗi Khởi Chạy", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private JPanel createPythonGUIPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(BG_MAIN);
+        panel.setBorder(new EmptyBorder(25, 25, 25, 25));
+
+        JLabel titleLbl = new JLabel("KIỂM THỬ GIAO DIỆN PYTHON (DESKTOP)");
+        titleLbl.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        titleLbl.setForeground(COLOR_TEXT);
+        titleLbl.setBorder(new EmptyBorder(0, 0, 15, 0));
+        panel.add(titleLbl, BorderLayout.NORTH);
+
+        JPanel content = new JPanel(new GridBagLayout());
+        content.setBackground(BG_CARD);
+        content.setBorder(new EmptyBorder(40, 40, 40, 40));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(15, 15, 15, 15);
+
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        JLabel lblDesc = new JLabel("<html><body style='width: 450px;'>"
+                + "<h3 style='color: white; margin-bottom: 8px;'>Chức năng khởi chạy Giao diện Python</h3>"
+                + "<p style='color: #94A3B8; line-height: 1.4;'>"
+                + "Bạn có thể khởi chạy ứng dụng Quản lý tài chính cá nhân viết bằng Python (sử dụng giao diện đồ họa Tkinter Desktop). "
+                + "Cả hai ứng dụng Java và Python sẽ cùng chia sẻ dữ liệu để đối chiếu tính năng."
+                + "</p>"
+                + "<p style='color: #94A3B8; line-height: 1.4; margin-top: 10px;'>"
+                + "<i>Lưu ý:</i> Hệ thống cần cấu hình sẵn trình biên dịch Python trong biến môi trường PATH."
+                + "</p></body></html>");
+        lblDesc.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        content.add(lblDesc, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2; gbc.weightx = 1.0;
+        JButton btnLaunch = new JButton("KHỞI CHẠY PYTHON GUI");
+        styleAccentButton(btnLaunch);
+        btnLaunch.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLaunch.addActionListener(e -> launchPythonGUI());
+        content.add(btnLaunch, gbc);
+
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(false);
+        wrapper.add(content, BorderLayout.NORTH);
+        panel.add(wrapper, BorderLayout.CENTER);
+
+        return panel;
     }
 }
